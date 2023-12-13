@@ -23,6 +23,7 @@ void check_func(FILE *fileDesc)
 	instruction_t instructions_new[] = {
 		{"pop", pop_node},
 		{"pall", print_nodes},
+		{"swap", swap_node},
 		/*{"pint", pint_op},
 		{"swap", swap_node},
 		{"add", add_node},
