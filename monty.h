@@ -1,37 +1,59 @@
-#ifndef MONTY_H
-#define MONTY_H
+#ifndef MONTY
+#define MONTY
 
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <ctype.h>
+
 /**
- * struct stack_s - doubly linked list representation of a stack (or queue)
- * @n: integer
- * @prev: points to the previous element of the stack (or queue)
- * @next: points to the next element of the stack (or queue)
+ * struct stack_s - a doubly linked list representation of a stack or queue
+ * @n: an integer
+ * @prev: It points to the previous element of the stack or queue
+ * @next: It points to the next element of a stack or queue
+ *
+ * Description: A doubly linked list node structure
+ * for stack, queues, LIFO, FIFO ALX project
+ */
+	typedef struct stack_s
+	{
+		int n;
+		struct stack_s *prev;
+		struct stack_s *next;
+	} stack_t;
+
+/**
+ * struct globals - The global structure to use in the functions
+ * @lifo: stack or queue
+ * @cont: current line
+ * @arg: The second parameter inside the current line
+ * @head: doubly lined list
+ * @fd: a file descriptor
+ * @buffer: Input text
  *
  * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO Holberton project
+ * for stack, queues, LIFO, FIFO ALX project
  */
-typedef struct stack_s
+typedef struct globals
 {
-	int n;
-	struct stack_s *prev;
-	struct stack_s *next;
-} stack_t;
+	int lifo;
+	unsigned int cont;
+	char *arg;
+	stack_t *head;
+	FILE *fd;
+	char *buffer;
+} global_t;
 
 /**
  * struct instruction_s - opcode and its function
- * @opcode: the opcode
+ * @opcode: The opcode
  * @f: function to handle the opcode
- *
+ * 
  * Description: opcode and its function
- * for stack, queues, LIFO, FIFO Holberton project
+ * for stack, queues, LIFO, FIFO ALX project
  */
 typedef struct instruction_s
 {
@@ -39,70 +61,43 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/**
- * struct buf_struct - Global buffers.
- * @read_buff: Buffer for read.
- * @list_cmd: Tokenized read buffer.
- * @tok_cmd: Tokenize each token from previous split based on spaces.
- * @argv: Arguments from command line.
- *
- * Description: - Buffers used globally throughout files.
- */
-typedef struct buf_struct
-{
-	char read_buff[4096];
-	char *list_cmd[1000];
-	char *tok_cmd[1000];
-	char **argv;
-} buf_struct;
+	extern global_t vglo;
 
+	/* opcode_instructions */
+	void _push(stack_t **stack, unsigned int line_number);
+	void _pall(stack_t **stack, unsigned int line_number);
+	void _pint(stack_t **doubly, unsigned int cline);
+	void _pop(stack_t **doubly, unsigned int cline);
+	void _swap(stack_t **doubly, unsigned int cline);
+	void _queue(stack_t **doubly, unsigned int cline);
+	void _stack(stack_t **doubly, unsigned int cline);
+	void _add(stack_t **doubly, unsigned int cline);
+	void _nop(stack_t **doubly, unsigned int cline);
+	void _sub(stack_t **doubly, unsigned int cline);
+	void _div(stack_t **doubly, unsigned int cline);
+	void _mul(stack_t **doubly, unsigned int cline);
+	void _mod(stack_t **doubly, unsigned int cline);
+	void _pchar(stack_t **doubly, unsigned int cline);
+	void _pstr(stack_t **doubly, unsigned int cline);
+	void _rotl(stack_t **doubly, unsigned int cline);
+	void _rotr(stack_t **doubly, unsigned int cline);
 
-/* Execute functions */
+	/* get function */
+	void (*getOpcodes(char *opc))(stack_t **stack, unsigned int line_number);
 
-void (*get_op_func(char *s))(stack_t **stack, unsigned int line_number);
-void exec_loop(buf_struct *a);
+	/* imported function */
+	int _sch(char *s, char c);
+	char *_strtoky(char *s, char *d);
+	void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+	void *_calloc(unsigned int nmemb, unsigned int size);
+	int _strcmp(char *s1, char *s2);
 
-/* End of execute functions */
+	/* doubly linked list functions */
+	stack_t *add_dnodeint_end(stack_t **head, const int n);
+	stack_t *add_dnodeint(stack_t **head, const int n);
+	void free_dlistint(stack_t *head);
 
-/* String functions */
+	/* main */
+	void free_vglo(void);
 
-char **split_spaces(char *buff, buf_struct *a);
-char **split_newline(buf_struct *a);
-buf_struct *make_struct(char *argv[]);
-
-/*End of string functions */
-
-/* Doubly linked list functions */
-
-void free_stack(stack_t *head);
-
-/* End of Doubly linked list functions */
-
-/* Helper functions */
-
-int digits_only(char *str);
-
-/* End of helper functions */
-
-/* monty functions */
-
-stack_t *push(stack_t **head, int n);
-void pall(stack_t **h, unsigned int line_n);
-void pint(stack_t **h, unsigned int line_n);
-void pop(stack_t **h, unsigned int line_n);
-void swap(stack_t **stack, unsigned int line_n);
-void add(stack_t **stack, unsigned int line_n);
-void sub(stack_t **stack, unsigned int line_n);
-void _div(stack_t **stack, unsigned int line_n);
-void mod(stack_t **stack, unsigned int line_n);
-void mul(stack_t **stack, unsigned int line_n);
-void nop(stack_t **stack, unsigned int line_n);
-void pchar(stack_t **stack, unsigned int line_n);
-void pstr(stack_t **stack, unsigned int line_n);
-void rotl(stack_t **stack, unsigned int line_n);
-void rotr(stack_t **stack, unsigned int line_n);
-void queue(stack_t **stack, unsigned int line_n);
-
-/* end of monty functions */
-
-#endif /*MONTY_H*/
+	#endif
